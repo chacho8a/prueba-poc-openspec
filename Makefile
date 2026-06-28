@@ -21,6 +21,11 @@ docker-build:
 	docker-compose build
 
 docker-up:
+	@if [ ! -f .env ]; then \
+		echo "Error: El archivo .env no existe."; \
+		echo "Ejecuta 'make env-setup' para crearlo desde .env.example"; \
+		exit 1; \
+	fi
 	@echo "Levantando aplicación con Docker Compose..."
 	docker-compose up -d
 	@echo "Aplicación corriendo en http://localhost:8000"
