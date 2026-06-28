@@ -11,7 +11,7 @@
         <div id="auth-screen" class="auth-container">
             <div class="auth-card">
                 <h1>Task Manager</h1>
-                <div id="login-form" class="auth-form">
+                <form id="login-form" class="auth-form">
                     <h2>Iniciar Sesión</h2>
                     <div class="form-group">
                         <label for="login-email">Email</label>
@@ -22,10 +22,10 @@
                         <input type="password" id="login-password" required>
                     </div>
                     <div id="login-error" class="error-message"></div>
-                    <button id="login-btn" class="btn btn-primary">Iniciar Sesión</button>
+                    <button type="submit" id="login-btn" class="btn btn-primary">Iniciar Sesión</button>
                     <p class="auth-switch">¿No tienes cuenta? <a href="#" id="show-register">Regístrate</a></p>
-                </div>
-                <div id="register-form" class="auth-form" style="display: none;">
+                </form>
+                <form id="register-form" class="auth-form" style="display: none;">
                     <h2>Registrarse</h2>
                     <div class="form-group">
                         <label for="register-username">Usuario</label>
@@ -40,9 +40,9 @@
                         <input type="password" id="register-password" required>
                     </div>
                     <div id="register-error" class="error-message"></div>
-                    <button id="register-btn" class="btn btn-primary">Registrarse</button>
+                    <button type="submit" id="register-btn" class="btn btn-primary">Registrarse</button>
                     <p class="auth-switch">¿Ya tienes cuenta? <a href="#" id="show-login">Inicia sesión</a></p>
-                </div>
+                </form>
             </div>
         </div>
         <div id="main-screen" style="display: none;">

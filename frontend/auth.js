@@ -101,6 +101,75 @@ const Auth = {
         window.location.reload();
     },
 
+    async handleLogin() {
+        console.log('handleLogin - iniciando proceso de login');
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
+        const errorDiv = document.getElementById('login-error');
+        const loginBtn = document.getElementById('login-btn');
+        errorDiv.classList.remove('show');
+
+        if (!email || !password) {
+            errorDiv.textContent = 'Por favor completa todos los campos';
+            errorDiv.classList.add('show');
+            return;
+        }
+
+        loginBtn.disabled = true;
+        loginBtn.textContent = 'Iniciando sesión...';
+
+        try {
+            await this.login(email, password);
+            console.log('handleLogin - login exitoso, haciendo reload');
+            window.location.reload();
+        } catch (error) {
+            console.error('handleLogin - error:', error);
+            errorDiv.textContent = error.message;
+            errorDiv.classList.add('show');
+        } finally {
+            loginBtn.disabled = false;
+            loginBtn.textContent = 'Iniciar Sesión';
+        }
+    },
+
+    async handleRegister() {
+        console.log('handleRegister - iniciando proceso de registro');
+        const username = document.getElementById('register-username').value;
+        const email = document.getElementById('register-email').value;
+        const password = document.getElementById('register-password').value;
+        const errorDiv = document.getElementById('register-error');
+        const registerBtn = document.getElementById('register-btn');
+        errorDiv.classList.remove('show');
+
+        if (!username || !email || !password) {
+            errorDiv.textContent = 'Por favor completa todos los campos';
+            errorDiv.classList.add('show');
+            return;
+        }
+
+        if (password.length < 6) {
+            errorDiv.textContent = 'La contraseña debe tener al menos 6 caracteres';
+            errorDiv.classList.add('show');
+            return;
+        }
+
+        registerBtn.disabled = true;
+        registerBtn.textContent = 'Registrando...';
+
+        try {
+            await this.register(username, email, password);
+            console.log('handleRegister - registro exitoso, haciendo reload');
+            window.location.reload();
+        } catch (error) {
+            console.error('handleRegister - error:', error);
+            errorDiv.textContent = error.message;
+            errorDiv.classList.add('show');
+        } finally {
+            registerBtn.disabled = false;
+            registerBtn.textContent = 'Registrarse';
+        }
+    },
+
     initAuthUI() {
         const loginForm = document.getElementById('login-form');
         const registerForm = document.getElementById('register-form');
@@ -122,71 +191,24 @@ const Auth = {
             loginForm.style.display = 'block';
         });
 
-        loginBtn.addEventListener('click', async () => {
-            console.log('loginBtn click - iniciando proceso de login');
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
-            const errorDiv = document.getElementById('login-error');
-            errorDiv.classList.remove('show');
-
-            if (!email || !password) {
-                errorDiv.textContent = 'Por favor completa todos los campos';
-                errorDiv.classList.add('show');
-                return;
-            }
-
-            loginBtn.disabled = true;
-            loginBtn.textContent = 'Iniciando sesión...';
-
-            try {
-                await this.login(email, password);
-                console.log('loginBtn click - login exitoso, haciendo reload');
-                window.location.reload();
-            } catch (error) {
-                console.error('loginBtn click - error:', error);
-                errorDiv.textContent = error.message;
-                errorDiv.classList.add('show');
-            } finally {
-                loginBtn.disabled = false;
-                loginBtn.textContent = 'Iniciar Sesión';
-            }
+        loginBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            await this.handleLogin();
         });
 
-        registerBtn.addEventListener('click', async () => {
-            console.log('registerBtn click - iniciando proceso de registro');
-            const username = document.getElementById('register-username').value;
-            const email = document.getElementById('register-email').value;
-            const password = document.getElementById('register-password').value;
-            const errorDiv = document.getElementById('register-error');
-            errorDiv.classList.remove('show');
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            await this.handleLogin();
+        });
 
-            if (!username || !email || !password) {
-                errorDiv.textContent = 'Por favor completa todos los campos';
-                errorDiv.classList.add('show');
-                return;
-            }
+        registerBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            await this.handleRegister();
+        });
 
-            if (password.length < 6) {
-                errorDiv.textContent = 'La contraseña debe tener al menos 6 caracteres';
-                errorDiv.classList.add('show');
-                return;
-            }
-
-            registerBtn.disabled = true;
-            registerBtn.textContent = 'Registrando...';
-
-            try {
-                await this.register(username, email, password);
-                console.log('registerBtn click - registro exitoso, haciendo reload');
-                window.location.reload();
-            } catch (error) {
-                console.error('registerBtn click - error:', error);
-                errorDiv.textContent = error.message;
-                errorDiv.classList.add('show');
-            } finally {
-                registerBtn.disabled = false;
-                registerBtn.textContent = 'Registrarse';
-            }
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            await this.handleRegister();
         });
 
         logoutBtn.addEventListener('click', () => {
