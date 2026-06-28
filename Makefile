@@ -1,5 +1,13 @@
 .PHONY: help docker-build docker-up docker-down docker-logs docker-restart docker-dev test test-cov env-setup clean db-reset
 
+define check-env
+	@if [ ! -f .env ]; then \
+		echo "Error: El archivo .env no existe."; \
+		echo "Ejecuta 'make env-setup' para crearlo desde .env.example"; \
+		exit 1; \
+	fi
+endef
+
 help:
 	@echo "Task Manager - Comandos disponibles:"
 	@echo ""
@@ -17,15 +25,12 @@ help:
 	@echo ""
 
 docker-build:
+	$(check-env)
 	@echo "Construyendo imagen Docker..."
 	docker-compose build
 
 docker-up:
-	@if [ ! -f .env ]; then \
-		echo "Error: El archivo .env no existe."; \
-		echo "Ejecuta 'make env-setup' para crearlo desde .env.example"; \
-		exit 1; \
-	fi
+	$(check-env)
 	@echo "Levantando aplicación con Docker Compose..."
 	docker-compose up -d
 	@echo "Aplicación corriendo en http://localhost:8000"
@@ -38,19 +43,23 @@ docker-logs:
 	docker-compose logs -f
 
 docker-restart:
+	$(check-env)
 	@echo "Reiniciando contenedores Docker..."
 	docker-compose restart
 
 docker-dev:
+	$(check-env)
 	@echo "Levantando en modo desarrollo con Docker..."
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
 
 test:
+	$(check-env)
 	@echo "Ejecutando pruebas en Docker..."
 	docker compose -f docker-compose.test.yml up --build --abort-on-container-exit
 	docker compose -f docker-compose.test.yml down -v
 
 test-cov:
+	$(check-env)
 	@echo "Ejecutando pruebas con cobertura en Docker..."
 	docker compose -f docker-compose.test.yml run --rm test pytest tests/ -v --cov=backend --cov-report=term-missing
 	docker compose -f docker-compose.test.yml down -v
