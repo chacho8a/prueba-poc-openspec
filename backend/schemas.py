@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr, field_validator
+from pydantic import BaseModel, ConfigDict, EmailStr, field_validator
 from datetime import datetime, date
 from typing import Optional
 
@@ -34,8 +34,7 @@ class UserResponse(BaseModel):
     username: str
     email: str
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class TaskCreate(BaseModel):
     title: str
@@ -96,5 +95,4 @@ class TaskResponse(BaseModel):
     updated_at: Optional[datetime]
     user_id: int
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)

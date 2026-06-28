@@ -1,4 +1,4 @@
-.PHONY: help docker-build docker-up docker-down docker-logs docker-restart docker-dev clean db-reset
+.PHONY: help docker-build docker-up docker-down docker-logs docker-restart docker-dev test test-cov clean db-reset
 
 help:
 	@echo "Task Manager - Comandos disponibles:"
@@ -9,6 +9,8 @@ help:
 	@echo "  make docker-logs      - Ver logs de Docker"
 	@echo "  make docker-restart   - Reiniciar contenedores Docker"
 	@echo "  make docker-dev       - Levantar en modo desarrollo con hot-reload"
+	@echo "  make test             - Ejecutar pruebas en Docker"
+	@echo "  make test-cov         - Ejecutar pruebas con cobertura en Docker"
 	@echo "  make clean            - Limpiar archivos temporales y cache"
 	@echo "  make db-reset         - Resetear base de datos"
 	@echo ""
@@ -36,6 +38,16 @@ docker-restart:
 docker-dev:
 	@echo "Levantando en modo desarrollo con Docker..."
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
+
+test:
+	@echo "Ejecutando pruebas en Docker..."
+	docker compose -f docker-compose.test.yml up --build --abort-on-container-exit
+	docker compose -f docker-compose.test.yml down -v
+
+test-cov:
+	@echo "Ejecutando pruebas con cobertura en Docker..."
+	docker compose -f docker-compose.test.yml run --rm test pytest tests/ -v --cov=backend --cov-report=term-missing
+	docker compose -f docker-compose.test.yml down -v
 
 clean:
 	@echo "Limpiando archivos temporales y contenedores Docker..."

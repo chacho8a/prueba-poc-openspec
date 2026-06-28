@@ -1,3 +1,4 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -6,7 +7,14 @@ from backend.database import engine, Base
 from backend import models
 from backend.routers import auth, tasks
 
-app = FastAPI(title="Task Manager", description="Gestor de tareas con autenticación")
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    Base.metadata.create_all(bind=engine)
+    yield
+
+
+app = FastAPI(title="Task Manager", description="Gestor de tareas con autenticación", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
@@ -20,10 +28,6 @@ app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
 app.include_router(tasks.router, prefix="/api/tasks", tags=["tasks"])
 
 app.mount("/static", StaticFiles(directory="frontend"), name="static")
-
-@app.on_event("startup")
-async def startup():
-    Base.metadata.create_all(bind=engine)
 
 @app.get("/")
 async def root():

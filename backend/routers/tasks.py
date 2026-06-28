@@ -61,7 +61,7 @@ async def update_task(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Task not found"
         )
-    update_data = task_data.dict(exclude_unset=True)
+    update_data = task_data.model_dump(exclude_unset=True)
     for key, value in update_data.items():
         setattr(task, key, value)
     db.commit()
