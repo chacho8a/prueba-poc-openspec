@@ -25,12 +25,24 @@ const App = {
         document.getElementById('add-task-btn').addEventListener('click', () => this.openCreateModal());
         document.getElementById('modal-close').addEventListener('click', () => this.closeModal());
         document.getElementById('modal-cancel').addEventListener('click', () => this.closeModal());
-        document.getElementById('modal-save').addEventListener('click', () => this.saveTask());
+        document.getElementById('modal-save').addEventListener('click', (e) => {
+            e.preventDefault();
+            this.saveTask();
+        });
+        document.getElementById('task-modal').addEventListener('submit', (e) => {
+            e.preventDefault();
+            this.saveTask();
+        });
         document.getElementById('delete-modal-close').addEventListener('click', () => this.closeDeleteModal());
         document.getElementById('delete-cancel').addEventListener('click', () => this.closeDeleteModal());
         document.getElementById('delete-confirm').addEventListener('click', () => this.confirmDelete());
         document.getElementById('logout-btn').addEventListener('click', () => Auth.logout());
         document.getElementById('search-input').addEventListener('input', () => this.applyFilters());
+        document.getElementById('search-input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.target.blur();
+            }
+        });
         document.getElementById('status-filter').addEventListener('change', () => this.applyFilters());
         document.getElementById('priority-filter').addEventListener('change', () => this.applyFilters());
         document.getElementById('sort-by').addEventListener('change', () => this.applyFilters());

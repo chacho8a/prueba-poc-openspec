@@ -86,11 +86,11 @@
                 </div>
             </div>
         </div>
-        <div id="task-modal" class="modal" style="display: none;">
+        <form id="task-modal" class="modal" style="display: none;">
             <div class="modal-content">
                 <div class="modal-header">
                     <h2 id="modal-title">Nueva Tarea</h2>
-                    <button class="modal-close" id="modal-close">&times;</button>
+                    <button type="button" class="modal-close" id="modal-close">&times;</button>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
@@ -123,11 +123,11 @@
                     <div id="task-form-error" class="error-message"></div>
                 </div>
                 <div class="modal-footer">
-                    <button id="modal-cancel" class="btn btn-secondary">Cancelar</button>
-                    <button id="modal-save" class="btn btn-primary">Guardar</button>
+                    <button type="button" id="modal-cancel" class="btn btn-secondary">Cancelar</button>
+                    <button type="submit" id="modal-save" class="btn btn-primary">Guardar</button>
                 </div>
             </div>
-        </div>
+        </form>
         <div id="delete-modal" class="modal" style="display: none;">
             <div class="modal-content modal-small">
                 <div class="modal-header">
