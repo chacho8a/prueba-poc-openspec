@@ -13,90 +13,77 @@ Aplicación web completa para gestión de tareas con autenticación de usuarios,
 - **Diseño responsivo**: Interfaz adaptable a dispositivos móviles y desktop
 - **Docker**: Despliegue containerizado con volúmenes persistentes
 
-## Requisitos Previos
+## Requisitos Iniciales
 
-### Despliegue con Docker
-- Docker 20.10 o superior
-- Docker Compose 2.0 o superior
+Antes de ejecutar el proyecto, asegúrate de tener instalado:
 
-## Instalación y Ejecución
+| Requisito | Versión mínima | Verificación |
+|-----------|---------------|--------------|
+| **Docker** | 20.10+ | `docker --version` |
+| **Docker Compose** | 2.0+ | `docker compose version` |
+| **Make** | 3.81+ | `make --version` |
+| **Puerto 8000** | Libre | `lsof -i :8000` |
 
-### Paso 1: Clonar o descargar el repositorio
+> **Nota:** No es necesario instalar Python ni dependencias manualmente; Docker se encarga de todo.
+
+## Instrucciones de Ejecución con Make
+
+### 1. Clonar el repositorio
 ```bash
+git clone <url-del-repositorio>
 cd ia2_actividad_1
 ```
 
-### Paso 2: Levantar la aplicación con Docker
-
-**Opción A: Producción (recomendado)**
+### 2. Levantar la aplicación (producción)
 ```bash
 make docker-up
 ```
+Esto construye la imagen y levanta el contenedor en segundo plano. La aplicación estará disponible en **http://localhost:8000**.
 
-**Opción B: Desarrollo con hot-reload**
+### 3. Levantar en modo desarrollo (hot-reload)
 ```bash
 make docker-dev
 ```
+Ideal para desarrollo: los cambios en el código se reflejan automáticamente sin reiniciar.
 
-### Paso 3: Acceder a la aplicación
+### 4. Ver logs en tiempo real
+```bash
+make docker-logs
+```
+Presiona `Ctrl+C` para salir de los logs sin detener la aplicación.
 
-Abrir en el navegador: http://localhost:8000
-
-### Paso 4: Detener la aplicación
+### 5. Detener la aplicación
 ```bash
 make docker-down
 ```
 
-### Paso 5: Detener y eliminar volúmenes (⚠️ elimina los datos)
+### 6. Reiniciar contenedores
 ```bash
-docker-compose down -v
+make docker-restart
 ```
 
-## Makefile - Comandos Rápidos
-
-El proyecto incluye un `Makefile` para facilitar las tareas comunes de desarrollo:
-
+### 7. Limpiar todo (contenedores, volúmenes y caché)
 ```bash
-make help              # Mostrar todos los comandos disponibles
+make clean
 ```
 
-### Comandos Principales
-
+### 8. Resetear la base de datos
 ```bash
-# Docker
-make docker-build      # Construir imagen Docker
-make docker-up         # Levantar aplicación con Docker Compose
-make docker-down       # Detener aplicación Docker
-make docker-logs       # Ver logs de Docker en tiempo real
-make docker-restart    # Reiniciar contenedores Docker
-make docker-dev        # Levantar en modo desarrollo con Docker (hot-reload)
-
-# Mantenimiento
-make clean             # Limpiar archivos temporales y cache
-make db-reset          # Resetear base de datos (elimina todos los datos)
+make db-reset
 ```
+Elimina `tasks.db`. La base se recrea automáticamente al reiniciar la aplicación.
 
-### Flujo de Trabajo Típico
-
-**Primer uso:**
+### Resumen rápido
 ```bash
-make docker-up         # Levantar aplicación
-```
-
-**Desarrollo diario:**
-```bash
-make docker-dev        # Desarrollo con hot-reload
-```
-
-**Ver logs:**
-```bash
-make docker-logs       # Ver logs en tiempo real (Ctrl+C para salir)
-```
-
-**Reiniciar todo:**
-```bash
-make clean               # Detener Docker, eliminar volúmenes y limpiar cache
-make docker-up           # Levantar nuevamente
+make help              # Ver todos los comandos disponibles
+make docker-build      # Solo construir la imagen
+make docker-up         # Construir + levantar
+make docker-dev        # Modo desarrollo con hot-reload
+make docker-logs       # Ver logs
+make docker-down       # Detener
+make docker-restart    # Reiniciar
+make clean             # Limpieza completa
+make db-reset          # Resetear base de datos
 ```
 
 ## Uso
