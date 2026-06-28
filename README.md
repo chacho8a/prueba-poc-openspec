@@ -95,6 +95,72 @@ Para desarrollo con hot-reload:
 docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
 ```
 
+## Makefile - Comandos Rápidos
+
+El proyecto incluye un `Makefile` para facilitar las tareas comunes de desarrollo:
+
+```bash
+make help              # Mostrar todos los comandos disponibles
+```
+
+### Comandos Principales
+
+```bash
+# Instalación y configuración
+make install           # Instalar dependencias Python
+
+# Ejecución local
+make run               # Ejecutar aplicación en puerto 8000
+make dev               # Ejecutar en modo desarrollo con hot-reload
+
+# Docker
+make docker-build      # Construir imagen Docker
+make docker-up         # Levantar aplicación con Docker Compose
+make docker-down       # Detener aplicación Docker
+make docker-logs       # Ver logs de Docker en tiempo real
+make docker-restart    # Reiniciar contenedores Docker
+make docker-dev        # Levantar en modo desarrollo con Docker (hot-reload)
+
+# Calidad de código
+make test              # Ejecutar tests con pytest
+make lint              # Ejecutar linter (flake8)
+make format            # Formatear código (black + isort)
+
+# Mantenimiento
+make clean             # Limpiar archivos temporales y cache
+make db-reset          # Resetear base de datos (elimina todos los datos)
+```
+
+### Flujo de Trabajo Típico
+
+**Primer uso:**
+```bash
+make install           # Instalar dependencias
+make docker-up         # Levantar aplicación
+```
+
+**Desarrollo diario:**
+```bash
+make dev               # Ejecutar con hot-reload para desarrollo
+# o
+make docker-dev        # Desarrollo con Docker
+```
+
+**Antes de commit:**
+```bash
+make format            # Formatear código
+make lint              # Verificar estilo
+make test              # Ejecutar tests
+```
+
+**Reiniciar todo:**
+```bash
+make docker-down       # Detener Docker
+make clean             # Limpiar cache
+make db-reset          # Resetear base de datos (opcional)
+make docker-up         # Levantar nuevamente
+```
+
 ## Uso
 
 ### Registro de Usuario
@@ -406,6 +472,7 @@ ia2_actividad_1/
 │   └── app.js               # Lógica de la aplicación
 ├── database/                # Base de datos SQLite (generado)
 ├── main.py                  # Punto de entrada FastAPI
+├── Makefile                 # Comandos rápidos de desarrollo
 ├── requirements.txt         # Dependencias Python
 ├── Dockerfile               # Configuración Docker
 ├── docker-compose.yml       # Orquestación Docker
