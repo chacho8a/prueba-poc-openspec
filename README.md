@@ -15,84 +15,41 @@ Aplicación web completa para gestión de tareas con autenticación de usuarios,
 
 ## Requisitos Previos
 
-### Instalación Local
-- Python 3.11 o superior
-- pip (gestor de paquetes de Python)
-
 ### Despliegue con Docker
 - Docker 20.10 o superior
 - Docker Compose 2.0 o superior
 
-## Instalación
+## Instalación y Ejecución
 
-### Opción 1: Instalación Local
-
-1. **Clonar o descargar el repositorio**
-   ```bash
-   cd ia2_actividad_1
-   ```
-
-2. **Crear entorno virtual**
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # En Windows: venv\Scripts\activate
-   ```
-
-3. **Instalar dependencias**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. **Configurar variables de entorno** (opcional)
-   
-   Editar el archivo `.env`:
-   ```
-   SECRET_KEY=your-secret-key-change-in-production-min-32-chars
-   DATABASE_URL=sqlite:///./database/tasks.db
-   ALGORITHM=HS256
-   ACCESS_TOKEN_EXPIRE_MINUTES=30
-   ```
-
-5. **Ejecutar la aplicación**
-   ```bash
-   uvicorn main:app --reload --host 0.0.0.0 --port 8000
-   ```
-
-6. **Acceder a la aplicación**
-   
-   Abrir en el navegador: http://localhost:8000
-
-### Opción 2: Despliegue con Docker
-
-1. **Construir y ejecutar con Docker Compose**
-   ```bash
-   docker-compose up --build
-   ```
-
-2. **Ejecutar en modo detachado**
-   ```bash
-   docker-compose up -d
-   ```
-
-3. **Acceder a la aplicación**
-   
-   Abrir en el navegador: http://localhost:8000
-
-4. **Detener la aplicación**
-   ```bash
-   docker-compose down
-   ```
-
-5. **Detener y eliminar volúmenes** (⚠️ elimina los datos)
-   ```bash
-   docker-compose down -v
-   ```
-
-### Opción 3: Modo Desarrollo con Docker
-
-Para desarrollo con hot-reload:
+### Paso 1: Clonar o descargar el repositorio
 ```bash
-docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
+cd ia2_actividad_1
+```
+
+### Paso 2: Levantar la aplicación con Docker
+
+**Opción A: Producción (recomendado)**
+```bash
+make docker-up
+```
+
+**Opción B: Desarrollo con hot-reload**
+```bash
+make docker-dev
+```
+
+### Paso 3: Acceder a la aplicación
+
+Abrir en el navegador: http://localhost:8000
+
+### Paso 4: Detener la aplicación
+```bash
+make docker-down
+```
+
+### Paso 5: Detener y eliminar volúmenes (⚠️ elimina los datos)
+```bash
+docker-compose down -v
 ```
 
 ## Makefile - Comandos Rápidos
@@ -106,13 +63,6 @@ make help              # Mostrar todos los comandos disponibles
 ### Comandos Principales
 
 ```bash
-# Instalación y configuración
-make install           # Instalar dependencias Python
-
-# Ejecución local
-make run               # Ejecutar aplicación en puerto 8000
-make dev               # Ejecutar en modo desarrollo con hot-reload
-
 # Docker
 make docker-build      # Construir imagen Docker
 make docker-up         # Levantar aplicación con Docker Compose
@@ -120,11 +70,6 @@ make docker-down       # Detener aplicación Docker
 make docker-logs       # Ver logs de Docker en tiempo real
 make docker-restart    # Reiniciar contenedores Docker
 make docker-dev        # Levantar en modo desarrollo con Docker (hot-reload)
-
-# Calidad de código
-make test              # Ejecutar tests con pytest
-make lint              # Ejecutar linter (flake8)
-make format            # Formatear código (black + isort)
 
 # Mantenimiento
 make clean             # Limpiar archivos temporales y cache
@@ -135,30 +80,23 @@ make db-reset          # Resetear base de datos (elimina todos los datos)
 
 **Primer uso:**
 ```bash
-make install           # Instalar dependencias
 make docker-up         # Levantar aplicación
 ```
 
 **Desarrollo diario:**
 ```bash
-make dev               # Ejecutar con hot-reload para desarrollo
-# o
-make docker-dev        # Desarrollo con Docker
+make docker-dev        # Desarrollo con hot-reload
 ```
 
-**Antes de commit:**
+**Ver logs:**
 ```bash
-make format            # Formatear código
-make lint              # Verificar estilo
-make test              # Ejecutar tests
+make docker-logs       # Ver logs en tiempo real (Ctrl+C para salir)
 ```
 
 **Reiniciar todo:**
 ```bash
-make docker-down       # Detener Docker
-make clean             # Limpiar cache
-make db-reset          # Resetear base de datos (opcional)
-make docker-up         # Levantar nuevamente
+make clean               # Detener Docker, eliminar volúmenes y limpiar cache
+make docker-up           # Levantar nuevamente
 ```
 
 ## Uso

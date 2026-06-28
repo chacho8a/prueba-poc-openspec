@@ -1,34 +1,17 @@
-.PHONY: help install run dev docker-build docker-up docker-down docker-logs test clean lint format
+.PHONY: help docker-build docker-up docker-down docker-logs docker-restart docker-dev clean db-reset
 
 help:
 	@echo "Task Manager - Comandos disponibles:"
 	@echo ""
-	@echo "  make install          - Instalar dependencias Python"
-	@echo "  make run              - Ejecutar aplicación localmente"
-	@echo "  make dev              - Ejecutar en modo desarrollo con hot-reload"
 	@echo "  make docker-build     - Construir imagen Docker"
 	@echo "  make docker-up        - Levantar aplicación con Docker Compose"
 	@echo "  make docker-down      - Detener aplicación Docker"
 	@echo "  make docker-logs      - Ver logs de Docker"
 	@echo "  make docker-restart   - Reiniciar contenedores Docker"
-	@echo "  make test             - Ejecutar tests"
-	@echo "  make lint             - Ejecutar linter (flake8)"
-	@echo "  make format           - Formatear código (black)"
+	@echo "  make docker-dev       - Levantar en modo desarrollo con hot-reload"
 	@echo "  make clean            - Limpiar archivos temporales y cache"
 	@echo "  make db-reset         - Resetear base de datos"
 	@echo ""
-
-install:
-	@echo "Instalando dependencias..."
-	pip install -r requirements.txt
-
-run:
-	@echo "Ejecutando aplicación en puerto 8000..."
-	uvicorn main:app --host 0.0.0.0 --port 8000
-
-dev:
-	@echo "Ejecutando en modo desarrollo con hot-reload..."
-	uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 
 docker-build:
 	@echo "Construyendo imagen Docker..."
@@ -54,21 +37,9 @@ docker-dev:
 	@echo "Levantando en modo desarrollo con Docker..."
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
 
-test:
-	@echo "Ejecutando tests..."
-	pytest tests/ -v --cov=backend --cov-report=term-missing
-
-lint:
-	@echo "Ejecutando linter..."
-	flake8 backend/ --max-line-length=120 --exclude=__pycache__,*.pyc
-
-format:
-	@echo "Formateando código..."
-	black backend/ --line-length=120
-	isort backend/
-
 clean:
-	@echo "Limpiando archivos temporales..."
+	@echo "Limpiando archivos temporales y contenedores Docker..."
+	docker-compose down -v --remove-orphans 2>/dev/null || true
 	find . -type d -name __pycache__ -exec rm -r {} +
 	find . -type f -name "*.pyc" -delete
 	find . -type d -name ".pytest_cache" -exec rm -r {} +
@@ -76,6 +47,8 @@ clean:
 	rm -rf .pytest_cache
 	rm -rf .coverage
 	rm -rf htmlcov
+	rm -f database/tasks.db
+	@echo "Limpieza completa: contenedores, volúmenes y archivos temporales eliminados"
 
 db-reset:
 	@echo "Reseteando base de datos..."
