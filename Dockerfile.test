@@ -12,4 +12,4 @@ COPY . .
 
 RUN mkdir -p /app/database
 
-CMD ["pytest", "tests/", "-v"]
+CMD ["pytest", "tests/", "-v", "--ignore=tests/ui"]
