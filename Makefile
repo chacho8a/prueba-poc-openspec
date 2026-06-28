@@ -1,4 +1,4 @@
-.PHONY: help docker-build docker-up docker-down docker-logs docker-restart docker-dev test test-cov clean db-reset
+.PHONY: help docker-build docker-up docker-down docker-logs docker-restart docker-dev test test-cov env-setup clean db-reset
 
 help:
 	@echo "Task Manager - Comandos disponibles:"
@@ -11,6 +11,7 @@ help:
 	@echo "  make docker-dev       - Levantar en modo desarrollo con hot-reload"
 	@echo "  make test             - Ejecutar pruebas en Docker"
 	@echo "  make test-cov         - Ejecutar pruebas con cobertura en Docker"
+	@echo "  make env-setup        - Crear archivo .env desde .env.example"
 	@echo "  make clean            - Limpiar archivos temporales y cache"
 	@echo "  make db-reset         - Resetear base de datos"
 	@echo ""
@@ -48,6 +49,15 @@ test-cov:
 	@echo "Ejecutando pruebas con cobertura en Docker..."
 	docker compose -f docker-compose.test.yml run --rm test pytest tests/ -v --cov=backend --cov-report=term-missing
 	docker compose -f docker-compose.test.yml down -v
+
+env-setup:
+	@if [ -f .env ]; then \
+		echo "El archivo .env ya existe. Si deseas recrearlo, elimínalo primero con: rm .env"; \
+	else \
+		cp .env.example .env && \
+		echo "Archivo .env creado desde .env.example"; \
+		echo "Edita .env para ajustar las variables de entorno según tu entorno."; \
+	fi
 
 clean:
 	@echo "Limpiando archivos temporales y contenedores Docker..."
