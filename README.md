@@ -34,40 +34,58 @@ git clone <url-del-repositorio>
 cd ia2_actividad_1
 ```
 
-### 2. Levantar la aplicación (producción)
+### 2. Configurar variables de entorno
+```bash
+make env-setup
+```
+Esto crea un archivo `.env` desde `.env.example`. Edita el archivo para ajustar las variables según tu entorno.
+
+### 3. Levantar la aplicación (producción)
 ```bash
 make docker-up
 ```
-Esto construye la imagen y levanta el contenedor en segundo plano. La aplicación estará disponible en **http://localhost:8000**.
+Esto construye la imagen (incluyendo los últimos cambios) y levanta el contenedor en segundo plano. La aplicación estará disponible en **http://localhost:8000**.
 
-### 3. Levantar en modo desarrollo (hot-reload)
+### 4. Levantar sin reconstruir (rápido)
+```bash
+make docker-up-fast
+```
+Levanta la aplicación sin reconstruir la imagen. Úsalo cuando no hayas hecho cambios en el código.
+
+### 5. Levantar en modo desarrollo (hot-reload)
 ```bash
 make docker-dev
 ```
 Ideal para desarrollo: los cambios en el código se reflejan automáticamente sin reiniciar.
 
-### 4. Ver logs en tiempo real
+### 5. Levantar en modo desarrollo (hot-reload)
+```bash
+make docker-dev
+```
+Ideal para desarrollo: los cambios en el código se reflejan automáticamente sin reiniciar.
+
+### 6. Ver logs en tiempo real
 ```bash
 make docker-logs
 ```
 Presiona `Ctrl+C` para salir de los logs sin detener la aplicación.
 
-### 5. Detener la aplicación
+### 7. Detener la aplicación
 ```bash
 make docker-down
 ```
 
-### 6. Reiniciar contenedores
+### 8. Reiniciar contenedores
 ```bash
 make docker-restart
 ```
 
-### 7. Limpiar todo (contenedores, volúmenes y caché)
+### 9. Limpiar todo (contenedores, volúmenes y caché)
 ```bash
 make clean
 ```
 
-### 8. Resetear la base de datos
+### 10. Resetear la base de datos
 ```bash
 make db-reset
 ```
@@ -76,14 +94,19 @@ Elimina `tasks.db`. La base se recrea automáticamente al reiniciar la aplicaci�
 ### Resumen rápido
 ```bash
 make help              # Ver todos los comandos disponibles
+make env-setup         # Crear archivo .env desde .env.example
 make docker-build      # Solo construir la imagen
-make docker-up         # Construir + levantar
+make docker-up         # Construir + levantar (reconstruye imagen)
+make docker-up-fast    # Solo levantar (sin reconstruir)
 make docker-dev        # Modo desarrollo con hot-reload
 make docker-logs       # Ver logs
 make docker-down       # Detener
 make docker-restart    # Reiniciar
 make clean             # Limpieza completa
 make db-reset          # Resetear base de datos
+make test              # Ejecutar pruebas de backend (64 tests)
+make test-ui           # Ejecutar pruebas de interfaz web (26 tests)
+make test-cov          # Ejecutar pruebas con cobertura
 ```
 
 ## Uso
@@ -93,12 +116,12 @@ make db-reset          # Resetear base de datos
 1. Acceder a http://localhost:8000
 2. Hacer clic en "Regístrate"
 3. Completar el formulario con usuario, email y contraseña (mínimo 6 caracteres)
-4. Hacer clic en "Registrarse"
+4. Hacer clic en "Registrarse" o presionar **Enter**
 
 ### Inicio de Sesión
 
 1. Ingresar email y contraseña
-2. Hacer clic en "Iniciar Sesión"
+2. Hacer clic en "Iniciar Sesión" o presionar **Enter**
 
 ### Gestión de Tareas
 
@@ -109,7 +132,7 @@ make db-reset          # Resetear base de datos
    - **Descripción** (opcional)
    - **Prioridad**: Alta, Media, Baja
    - **Fecha límite** (opcional)
-3. Hacer clic en "Guardar"
+3. Hacer clic en "Guardar" o presionar **Enter**
 
 #### Editar una tarea
 1. Hacer clic en "Editar" en la tarea deseada
@@ -442,8 +465,125 @@ ia2_actividad_1/
 - Exportación de tareas a CSV/PDF
 - Notificaciones por email
 - API REST completa con paginación
-- Tests automatizados
 - Despliegue en producción con base de datos PostgreSQL
+
+## Actividad 2 - Creación de Pruebas
+
+### Resumen de Pruebas
+
+El proyecto cuenta con un entorno completo de pruebas automatizadas que cubren todas las funcionalidades clave de la aplicación. Todas las pruebas se ejecutan en contenedores Docker, sin requerir instalación de dependencias en el host.
+
+**Total de pruebas: 90 tests**
+- ✅ Backend: 64 tests (97% cobertura)
+- ✅ Frontend: 26 tests de interfaz web
+
+### Tipos de Pruebas
+
+#### 1. Pruebas Unitarias (28 tests)
+Validan funciones individuales y validación de modelos Pydantic.
+
+**Ubicación:** `tests/unit/`
+
+- **test_auth.py** (9 tests): Hashing de contraseñas, creación y verificación de tokens JWT
+- **test_schemas.py** (19 tests): Validación de esquemas Pydantic (UserRegister, UserLogin, TaskCreate, TaskUpdate)
+
+#### 2. Pruebas de Integración (30 tests)
+Validan los endpoints de la API y su interacción con la base de datos.
+
+**Ubicación:** `tests/integration/`
+
+- **test_auth_api.py** (10 tests): Endpoints de autenticación (registro, login, errores)
+- **test_tasks_api.py** (20 tests): Endpoints de tareas (CRUD, autorización, aislamiento entre usuarios)
+
+#### 3. Pruebas End-to-End (6 tests)
+Validan flujos completos de usuario a través de múltiples operaciones.
+
+**Ubicación:** `tests/e2e/`
+
+- **test_workflows.py** (6 tests): Ciclo de vida completo, múltiples tareas, aislamiento entre usuarios, reutilización de tokens, acceso no autenticado
+
+#### 4. Pruebas de Interfaz Web (26 tests)
+Validan la interfaz de usuario usando Playwright para automatización de navegador.
+
+**Ubicación:** `tests/ui/`
+
+- **test_interface.py** (26 tests):
+  - TestAuthUI (10 tests): Login, registro, validaciones, logout
+  - TestTasksUI (16 tests): Elementos principales, creación/edición/eliminación de tareas, filtros, búsqueda
+
+### Ejecución de Pruebas
+
+```bash
+# Ejecutar pruebas de backend (64 tests)
+make test
+
+# Ejecutar pruebas de interfaz web (26 tests)
+make test-ui
+
+# Ejecutar pruebas de backend con reporte de cobertura
+make test-cov
+```
+
+Todas las pruebas se ejecutan en contenedores Docker aislados. No se requiere Python ni dependencias instaladas en el host.
+
+### Historial de Conversaciones
+
+A continuación se documentan las conversaciones realizadas durante el desarrollo de la Actividad 2, con enlaces a los resúmenes detallados:
+
+| # | Commit | Descripción | Documentación |
+|---|--------|-------------|---------------|
+| 1 | `16f6b89` | Entorno completo de pruebas Docker + Corrección de warnings | [conversation-summary.md](docs/conversation-summary.md) |
+| 2 | `a350a7a` | .venv/ al .gitignore y remover del tracking | [conversation-summary.md](docs/conversation-summary.md) |
+| 3 | `c48d440` | .env.example y target make env-setup | [conversation-summary.md](docs/conversation-summary.md) |
+| 4 | `264bd01` | Validar existencia de .env en docker-up | [conversation-summary.md](docs/conversation-summary.md) |
+| 5 | `e8db7ec` | Validar .env en todos los targets que lo requieren | [conversation-summary.md](docs/conversation-summary.md) |
+| 6 | `95302a2` | Actualización de pytest y verificación de pruebas | [conversation-summary-2.md](docs/conversation-summary-2.md) |
+| 7 | `d8d9167` | Pruebas de interfaz web con Playwright (26 tests) | [conversation-summary-4.md](docs/conversation-summary-4.md) |
+| 8 | `5f86fac` | Excluir tests/ui de make test | [conversation-summary-4.md](docs/conversation-summary-4.md) |
+| 9 | `adc90cf` | Formularios de login y registro se envían con Enter | [conversation-summary-5.md](docs/conversation-summary-5.md) |
+| 10 | `50cb848` | docker-up ahora reconstruye la imagen automáticamente | [conversation-summary-6.md](docs/conversation-summary-6.md) |
+| 11 | `fa1ff86` | Modal de Nueva Tarea y búsqueda se envían con Enter | [conversation-summary-7.md](docs/conversation-summary-7.md) |
+| 12 | `VER HISTORIAL` | Actualizar README con mejoras y sección Actividad 2 | [conversation-summary-8.md](docs/conversation-summary-8.md) |
+
+### Mejoras Realizadas
+
+Durante el desarrollo de la Actividad 2, se realizaron las siguientes mejoras adicionales:
+
+1. **Corrección de warnings de deprecación**
+   - SQLAlchemy: `declarative_base()` movido a `sqlalchemy.orm`
+   - Pydantic V2: `class Config` reemplazado por `model_config = ConfigDict()`
+   - Pydantic V2: `.dict()` reemplazado por `.model_dump()`
+   - FastAPI: `@app.on_event("startup")` reemplazado por `lifespan`
+   - passlib: Reemplazado por `bcrypt` directo
+
+2. **Mejoras de UX en formularios**
+   - Formularios de login y registro ahora se envían con Enter
+   - Modal de Nueva Tarea se envía con Enter
+   - Input de búsqueda acepta Enter para quitar el foco
+
+3. **Mejoras en el flujo de desarrollo**
+   - `make docker-up` ahora reconstruye la imagen automáticamente
+   - Nuevo comando `make docker-up-fast` para levantados rápidos
+   - Validación de `.env` en todos los targets que lo requieren
+
+### Cobertura de Código
+
+El entorno de pruebas alcanza un **97% de cobertura** en el código backend:
+
+```
+Name                          Stmts   Miss  Cover
+--------------------------------------------------
+backend/__init__.py               0      0   100%
+backend/auth.py                  49      4    92%
+backend/database.py              13      4    69%
+backend/models.py                21      0   100%
+backend/routers/__init__.py       0      0   100%
+backend/routers/auth.py          29      0   100%
+backend/routers/tasks.py         44      0   100%
+backend/schemas.py               84      0   100%
+--------------------------------------------------
+TOTAL                           240      8    97%
+```
 
 ## Licencia
 
