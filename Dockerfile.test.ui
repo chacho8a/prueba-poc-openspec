@@ -1,0 +1,11 @@
+FROM mcr.microsoft.com/playwright/python:v1.60.0-jammy
+
+WORKDIR /app
+
+COPY requirements-test-ui.txt .
+RUN pip install --no-cache-dir -r requirements-test-ui.txt
+
+COPY tests/ui/ ./tests/ui/
+COPY frontend/ ./frontend/
+
+CMD ["pytest", "tests/ui/", "-v", "--browser=chromium"]

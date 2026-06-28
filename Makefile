@@ -1,4 +1,4 @@
-.PHONY: help docker-build docker-up docker-down docker-logs docker-restart docker-dev test test-cov env-setup clean db-reset
+.PHONY: help docker-build docker-up docker-down docker-logs docker-restart docker-dev test test-cov test-ui env-setup clean db-reset
 
 define check-env
 	@if [ ! -f .env ]; then \
@@ -19,6 +19,7 @@ help:
 	@echo "  make docker-dev       - Levantar en modo desarrollo con hot-reload"
 	@echo "  make test             - Ejecutar pruebas en Docker"
 	@echo "  make test-cov         - Ejecutar pruebas con cobertura en Docker"
+	@echo "  make test-ui          - Ejecutar pruebas de interfaz web en Docker"
 	@echo "  make env-setup        - Crear archivo .env desde .env.example"
 	@echo "  make clean            - Limpiar archivos temporales y cache"
 	@echo "  make db-reset         - Resetear base de datos"
@@ -63,6 +64,12 @@ test-cov:
 	@echo "Ejecutando pruebas con cobertura en Docker..."
 	docker compose -f docker-compose.test.yml run --rm test pytest tests/ -v --cov=backend --cov-report=term-missing
 	docker compose -f docker-compose.test.yml down -v
+
+test-ui:
+	$(check-env)
+	@echo "Ejecutando pruebas de interfaz web en Docker..."
+	docker compose -f docker-compose.test.ui.yml up --build --abort-on-container-exit
+	docker compose -f docker-compose.test.ui.yml down -v
 
 env-setup:
 	@if [ -f .env ]; then \
