@@ -1,4 +1,4 @@
-.PHONY: help docker-build docker-up docker-down docker-logs docker-restart docker-dev test test-cov test-ui env-setup clean db-reset
+.PHONY: help docker-build docker-up docker-up-fast docker-down docker-logs docker-restart docker-dev test test-cov test-ui env-setup clean db-reset
 
 define check-env
 	@if [ ! -f .env ]; then \
@@ -12,7 +12,8 @@ help:
 	@echo "Task Manager - Comandos disponibles:"
 	@echo ""
 	@echo "  make docker-build     - Construir imagen Docker"
-	@echo "  make docker-up        - Levantar aplicación con Docker Compose"
+	@echo "  make docker-up        - Construir y levantar aplicación (reconstruye imagen)"
+	@echo "  make docker-up-fast   - Levantar aplicación sin reconstruir (solo si no hay cambios de código)"
 	@echo "  make docker-down      - Detener aplicación Docker"
 	@echo "  make docker-logs      - Ver logs de Docker"
 	@echo "  make docker-restart   - Reiniciar contenedores Docker"
@@ -32,9 +33,18 @@ docker-build:
 
 docker-up:
 	$(check-env)
+	@echo "Construyendo imagen Docker con últimos cambios..."
+	docker-compose build
 	@echo "Levantando aplicación con Docker Compose..."
 	docker-compose up -d
 	@echo "Aplicación corriendo en http://localhost:8000"
+
+docker-up-fast:
+	$(check-env)
+	@echo "Levantando aplicación sin reconstruir..."
+	docker-compose up -d
+	@echo "Aplicación corriendo en http://localhost:8000"
+	@echo "NOTA: Si cambiaste código, usa 'make docker-up' para reconstruir la imagen"
 
 docker-down:
 	@echo "Deteniendo aplicación Docker..."
