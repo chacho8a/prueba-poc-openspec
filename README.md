@@ -333,16 +333,16 @@ Eliminar tarea
 ![Login](docs/screenshots/login.png)
 
 ### Pantalla de Registro
-![Registro](docs/screenshots/register.png)
+![Registro](docs/screenshots/registro.png)
 
-### Lista de Tareas
-![Task List](docs/screenshots/task-list.png)
+### Lista de Tareas y Filtros
+![Lista de Tareas](docs/screenshots/lista_tareas_y_filtros.png)
 
 ### Crear Nueva Tarea
-![Create Task](docs/screenshots/create-task.png)
+![Nueva Tarea](docs/screenshots/nueva_tarea.png)
 
-### Filtros y Búsqueda
-![Filters](docs/screenshots/filters.png)
+### Selector de Fecha
+![Datepicker](docs/screenshots/nueva_tarea_datepicker.png)
 
 ## Troubleshooting
 
