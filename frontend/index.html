@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div id="app">
+        <div id="auth-screen" class="auth-container">
+            <div class="auth-card">
+                <h1>Task Manager</h1>
+                <div id="login-form" class="auth-form">
+                    <h2>Iniciar Sesión</h2>
+                    <div class="form-group">
+                        <label for="login-email">Email</label>
+                        <input type="email" id="login-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Contraseña</label>
+                        <input type="password" id="login-password" required>
+                    </div>
+                    <div id="login-error" class="error-message"></div>
+                    <button id="login-btn" class="btn btn-primary">Iniciar Sesión</button>
+                    <p class="auth-switch">¿No tienes cuenta? <a href="#" id="show-register">Regístrate</a></p>
+                </div>
+                <div id="register-form" class="auth-form" style="display: none;">
+                    <h2>Registrarse</h2>
+                    <div class="form-group">
+                        <label for="register-username">Usuario</label>
+                        <input type="text" id="register-username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-email">Email</label>
+                        <input type="email" id="register-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-password">Contraseña</label>
+                        <input type="password" id="register-password" required>
+                    </div>
+                    <div id="register-error" class="error-message"></div>
+                    <button id="register-btn" class="btn btn-primary">Registrarse</button>
+                    <p class="auth-switch">¿Ya tienes cuenta? <a href="#" id="show-login">Inicia sesión</a></p>
+                </div>
+            </div>
+        </div>
+        <div id="main-screen" style="display: none;">
+            <header class="app-header">
+                <h1>Task Manager</h1>
+                <div class="header-right">
+                    <span id="user-greeting"></span>
+                    <button id="logout-btn" class="btn btn-secondary">Cerrar Sesión</button>
+                </div>
+            </header>
+            <div class="container">
+                <div class="task-controls">
+                    <button id="add-task-btn" class="btn btn-primary">+ Nueva Tarea</button>
+                    <div class="filters">
+                        <input type="text" id="search-input" placeholder="Buscar tareas...">
+                        <select id="status-filter">
+                            <option value="all">Todos los estados</option>
+                            <option value="pending">Pendientes</option>
+                            <option value="completed">Completadas</option>
+                        </select>
+                        <select id="priority-filter">
+                            <option value="all">Todas las prioridades</option>
+                            <option value="high">Alta</option>
+                            <option value="medium">Media</option>
+                            <option value="low">Baja</option>
+                        </select>
+                        <select id="sort-by">
+                            <option value="newest">Más recientes</option>
+                            <option value="oldest">Más antiguas</option>
+                            <option value="due_date">Fecha límite</option>
+                            <option value="priority">Prioridad</option>
+                            <option value="title">Título</option>
+                        </select>
+                        <button id="clear-filters-btn" class="btn btn-secondary">Limpiar</button>
+                    </div>
+                </div>
+                <div id="task-count" class="task-count"></div>
+                <div id="task-list" class="task-list"></div>
+                <div id="empty-state" class="empty-state" style="display: none;">
+                    <p>No hay tareas. ¡Crea tu primera tarea!</p>
+                </div>
+            </div>
+        </div>
+        <div id="task-modal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="modal-title">Nueva Tarea</h2>
+                    <button class="modal-close" id="modal-close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="task-title">Título *</label>
+                        <input type="text" id="task-title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="task-description">Descripción</label>
+                        <textarea id="task-description" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="task-priority">Prioridad</label>
+                        <select id="task-priority">
+                            <option value="low">Baja</option>
+                            <option value="medium" selected>Media</option>
+                            <option value="high">Alta</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="task-due-date">Fecha límite</label>
+                        <input type="date" id="task-due-date">
+                    </div>
+                    <div class="form-group" id="status-group" style="display: none;">
+                        <label for="task-status">Estado</label>
+                        <select id="task-status">
+                            <option value="pending">Pendiente</option>
+                            <option value="completed">Completada</option>
+                        </select>
+                    </div>
+                    <div id="task-form-error" class="error-message"></div>
+                </div>
+                <div class="modal-footer">
+                    <button id="modal-cancel" class="btn btn-secondary">Cancelar</button>
+                    <button id="modal-save" class="btn btn-primary">Guardar</button>
+                </div>
+            </div>
+        </div>
+        <div id="delete-modal" class="modal" style="display: none;">
+            <div class="modal-content modal-small">
+                <div class="modal-header">
+                    <h2>Confirmar Eliminación</h2>
+                    <button class="modal-close" id="delete-modal-close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p>¿Estás seguro de que quieres eliminar la tarea "<span id="delete-task-title"></span>"?</p>
+                </div>
+                <div class="modal-footer">
+                    <button id="delete-cancel" class="btn btn-secondary">Cancelar</button>
+                    <button id="delete-confirm" class="btn btn-danger">Eliminar</button>
+                </div>
+            </div>
+        </div>
+        <div id="toast-container" class="toast-container"></div>
+    </div>
+    <script src="/static/auth.js"></script>
+    <script src="/static/api.js"></script>
+    <script src="/static/app.js"></script>
+</body>
+</html>
