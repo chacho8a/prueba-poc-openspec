@@ -544,7 +544,8 @@ A continuación se documentan las conversaciones realizadas durante el desarroll
 | 10 | `50cb848` | docker-up ahora reconstruye la imagen automáticamente | [conversation-summary-6.md](docs/conversation-summary-6.md) |
 | 11 | `fa1ff86` | Modal de Nueva Tarea y búsqueda se envían con Enter | [conversation-summary-7.md](docs/conversation-summary-7.md) |
 | 12 | `d840f49` | Actualizar README con mejoras y sección Actividad 2 | [conversation-summary-8.md](docs/conversation-summary-8.md) |
-| 13 | `VER HISTORIAL` | Agregar nota sobre placeholder de hash en historial | [conversation-summary-9.md](docs/conversation-summary-9.md) |
+| 13 | `93bdbef` | Agregar nota sobre placeholder de hash en historial | [conversation-summary-9.md](docs/conversation-summary-9.md) |
+| 14 | `VER HISTORIAL` | Fix make test-cov ignora tests/ui | [conversation-summary-10.md](docs/conversation-summary-10.md) |
 
 > **Nota:** El hash del último commit se actualiza en la siguiente interacción para evitar bucles infinitos de actualización. Consulta `git log` para ver el hash actualizado.
 
