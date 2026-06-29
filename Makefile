@@ -72,7 +72,7 @@ test:
 test-cov:
 	$(check-env)
 	@echo "Ejecutando pruebas con cobertura en Docker..."
-	docker compose -f docker-compose.test.yml run --rm test pytest tests/ -v --cov=backend --cov-report=term-missing
+	docker compose -f docker-compose.test.yml run --rm test pytest tests/ -v --ignore=tests/ui --cov=backend --cov-report=term-missing
 	docker compose -f docker-compose.test.yml down -v
 
 test-ui:
